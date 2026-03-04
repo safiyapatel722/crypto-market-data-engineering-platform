@@ -1,4 +1,5 @@
 .env
 *.json
+sql-create-table.sql
 virtual-env/
 __pycache__/

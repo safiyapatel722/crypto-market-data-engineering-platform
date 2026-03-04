@@ -1,8 +1,16 @@
+import argparse
+from src.pipelines.backfill_pipeline import BackfillPipeline
 
-from src.ingestion.coingecko_client import CoinGeckoClient
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--mode", required=True)
+    args = parser.parse_args()
 
-client = CoinGeckoClient()
+    if args.mode == "backfill":
+        pipeline = BackfillPipeline()
+        pipeline.run()
+    else:
+        print("Invalid mode")
 
-data = client.fetch_market_chart("bitcoin", 2)
-
-print(data.keys())
+if __name__ == "__main__":
+    main()
