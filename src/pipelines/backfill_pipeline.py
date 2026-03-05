@@ -70,7 +70,19 @@ class BackfillPipeline:
                 table_id=table_id,
                 job_config=job_config
             )
-
             logger.info(f"Loaded raw data into BigQuery for {coin}")
+
+        # 4️⃣ Run staging merge
+        with open("src\\transformation\staging_merge.sql", "r") as file:
+            merge_query = file.read()
+            self.bq_client.execute_query(merge_query)
+            logger.info("Staging merge completed.")
+            
+        # 5️⃣ Run curated merge
+        with open("src\\transformation\curated_daily_metrics.sql", "r") as file:
+             curated_query = file.read()
+             self.bq_client.execute_query(curated_query)
+             logger.info("Curated daily metrics merge completed.")
+            
 
         logger.info("Backfill completed successfully.")
