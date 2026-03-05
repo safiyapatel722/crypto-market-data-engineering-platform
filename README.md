@@ -111,7 +111,6 @@ crypto-market-data-pipeline/
 │       └── logger.py                  # Named logger factory — level from env var
 │
 ├── .env                               # Environment variables (never commit)
-├── .env.example                       # Template for .env
 ├── .gitignore
 └── main.py                            # Entry point — selects pipeline mode
 ```
@@ -346,9 +345,10 @@ bq mk --dataset YOUR_PROJECT_ID:platform_metadata
 
 ### 4. Configure Environment
 
+Create a `.env` file in the project root and populate it with your values (see [Environment Variables](#environment-variables)):
+
 ```bash
-cp .env.example .env
-# Open .env and fill in your values
+touch .env
 ```
 
 ### 5. Run Backfill (first time only)
@@ -379,7 +379,7 @@ python main.py --mode incremental
 | `LOG_LEVEL` | No | `INFO` | Verbosity: `DEBUG`, `INFO`, `WARNING`, `ERROR` |
 
 ```bash
-# .env.example
+# .env
 PROJECT_ID=your-gcp-project-id
 RAW_BUCKET=crypto-market-raw-data-us
 BACKFILL_DAYS=90
