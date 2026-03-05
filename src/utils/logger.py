@@ -1,8 +1,22 @@
 import logging
+import sys
 
-def get_logger(name: str):
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+
+def get_logger(name: str) -> logging.Logger:
+    logger = logging.getLogger(name)
+
+    if logger.handlers:
+        return logger
+
+    logger.setLevel(logging.INFO)
+
+    formatter = logging.Formatter(
+        "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
     )
-    return logging.getLogger(name)
+
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
+
+    return logger
