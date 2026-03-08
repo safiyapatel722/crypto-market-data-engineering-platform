@@ -342,8 +342,49 @@ bq mk --dataset YOUR_PROJECT_ID:staging_market_data
 bq mk --dataset YOUR_PROJECT_ID:curated_market_data
 bq mk --dataset YOUR_PROJECT_ID:platform_metadata
 ```
+## 4. Create BigQuery Tables
+Run the following DDL in the BigQuery console (or via bq query) to create all four tables with the correct schemas. Replace YOUR_PROJECT_ID with your actual GCP project ID.
+```bash
+-- Raw landing table — immutable, append-only
+CREATE TABLE `YOUR_PROJECT_ID.raw_market_data.crypto_api_responses` (
+  ingestion_time     TIMESTAMP,
+  coin_id            STRING,
+  api_days_requested INTEGER,
+  payload            STRING
+);
 
-### 4. Configure Environment
+-- Staging table — flattened, deduplicated timeseries
+CREATE TABLE `YOUR_PROJECT_ID.staging_market_data.crypto_price_timeseries` (
+  coin_id        STRING,
+  event_time     TIMESTAMP,
+  price_usd      FLOAT64,
+  market_cap     FLOAT64,
+  total_volume   FLOAT64,
+  ingestion_time TIMESTAMP
+);
+
+-- Curated table — daily aggregated business metrics
+CREATE TABLE `YOUR_PROJECT_ID.curated_market_data.crypto_daily_metrics` (
+  coin_id                STRING,
+  date                   DATE,
+  avg_price              FLOAT64,
+  max_price              FLOAT64,
+  min_price              FLOAT64,
+  total_volume           FLOAT64,
+  avg_market_cap         FLOAT64,
+  daily_price_change_pct FLOAT64
+);
+
+-- Metadata table — pipeline state for incremental resume
+CREATE TABLE `YOUR_PROJECT_ID.platform_metadata.pipeline_run_metadata` (
+  pipeline_name       STRING,
+  last_processed_date DATE,
+  updated_at          TIMESTAMP
+);
+```
+Important: Table names and column names must match exactly. The pipeline SQL uses price_usd, market_cap, total_volume, api_days_requested, and pipeline_run_metadata — any deviation will cause runtime errors.
+
+### 5. Configure Environment
 
 Create a `.env` file in the project root and populate it with your values (see [Environment Variables](#environment-variables)):
 
@@ -351,13 +392,13 @@ Create a `.env` file in the project root and populate it with your values (see [
 touch .env
 ```
 
-### 5. Run Backfill (first time only)
+### 6. Run Backfill (first time only)
 
 ```bash
 python main.py --mode backfill
 ```
 
-### 6. Run Incremental (daily)
+### 7. Run Incremental (daily)
 
 ```bash
 python main.py --mode incremental
