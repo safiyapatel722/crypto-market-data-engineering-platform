@@ -3,3 +3,5 @@ google-cloud-bigquery
 requests
 python-dotenv
 pandas
+pytest
+responses

@@ -317,8 +317,8 @@ All coins failed      →  do NOT update metadata
 git clone https://github.com/your-username/crypto-market-data-pipeline.git
 cd crypto-market-data-pipeline
 
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+python -m venv virtual-env
+source virtual-env/bin/activate        # Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
 ```
@@ -430,7 +430,8 @@ gcloud scheduler jobs create http crypto-incremental \
 | Done | Retry adapter and timeouts on all API calls |
 | Done | Parameterized queries — SQL injection protection |
 | Done | Per-coin error isolation |
-| Next | Unit and integration tests with mocked GCP clients |
+| Done | Unit tests with mocked GCP clients
+| Next | Integration tests with mocked GCP clients |
 | Next | GitHub Actions CI — run tests on every push |
 | Next | Slack or email alerting on pipeline failure |
 | Future | Cloud Run deployment with Cloud Scheduler trigger |
@@ -447,6 +448,8 @@ google-cloud-storage>=2.10.0
 requests>=2.31.0
 urllib3>=2.0.0
 python-dotenv>=1.0.0
+pytest>=7.0.0
+responses>=0.25.0
 ```
 
 ---
