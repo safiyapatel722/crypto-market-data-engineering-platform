@@ -314,7 +314,7 @@ All coins failed      →  do NOT update metadata
 ### 1. Clone and Install
 
 ```bash
-git clone https://github.com/your-username/crypto-market-data-pipeline.git
+git clone https://github.com/safiyapatel722/crypto-market-data-pipeline.git
 cd crypto-market-data-pipeline
 
 python -m venv virtual-env
